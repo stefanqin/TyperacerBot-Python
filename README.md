@@ -24,4 +24,5 @@ WPM > 100wpm (captcha!)
 Logging in.
 
 <b>Additional Remarks:</b>
+
 Heavily affected by lag. Beware! Your real WPM is a combination of desired WPM and lag.
