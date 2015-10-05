@@ -16,7 +16,6 @@ Must be somewhat technically minded (run python from cmd line, install selenium 
 
 Please install selenium chromedriver from [here](https://pypi.python.org/pypi/selenium) before using this bot.
 
-
 <b>Currently doesn't support:</b>
 
 WPM > 100wpm (captcha!)
@@ -25,4 +24,8 @@ Logging in.
 
 <b>Additional Remarks:</b>
 
-Heavily affected by lag. Beware! Your real WPM is a combination of desired WPM and lag.
+Heavily affected by lag. Beware!
+
+If the bot fails to begin typing, and no error is shown, you can assume it's because the racing page hasn't loaded yet. Blame it on your ISP.
+
+Lastly, one word = 5 characters. Hence the WPM is further affected by the length of the word typed, since every word is effectively typed by selenium at the same speed. 

@@ -23,19 +23,34 @@ import sys
 
 #variable parameters -> YOU CAN CHANGE THESE
 approx_WPM = 100
-num_of_races = 20
+num_of_races = 2
 
 load_delay = 15
 type_URL = 'http://play.typeracer.com'
 
-#num_or_races/num_error_messages tracker
+#num_or_races/speeds tracker
 race_num = 0
-num_errors = 6
+speeds = []
+
+#available error messages
+err_msgs = {
+    "default": "Nothing wrong here!",
+    "ERR_ONE": "Failed to open start screen. Errno: 1",
+    "ERR_TWO": "Failed to enter race. Errno: 2",
+    "ERR_THREE": "Race failed to finish. Errno: 3",
+    "ERR_FOUR": "Pop-up didn't load. Errno: 4",
+    "ERR_FIVE": "Captcha tester didn't load. Errno: 5",
+    "ERR_SIX": "Text couldn't be found. Errno: 6",
+    "ERR_SEVEN": "WPM couldn't be found. Errno: 7"
+}
+curr_err_msg = err_msgs["default"]
 
 def main():
     global race_num
     global approx_WPM
     global num_of_races
+    global curr_err_msg
+    global err_msgs
 
     try:
         bot_one = typeBot(num_of_races,approx_WPM)
@@ -43,17 +58,26 @@ def main():
         bot_one.enterRace()
 
         while race_num < bot_one.num_races:
-            full_text = bot_one.waitForCount()
-            bot_one.startTyping(full_text)
+            try:
+                full_text = bot_one.waitForCount()
+                bot_one.startTyping(full_text)
 
-            if race_num < bot_one.num_races:
-                bot_one.raceAgain()
+                if race_num < bot_one.num_races:
+                    bot_one.raceAgain()
 
-                #check if "sign me up!" pop-up appears.
-                if race_num == 2:
-                    bot_one.dontSignUp()
-    except:
-        raise
+                    #check if "sign me up!" pop-up appears.
+                    if race_num == 2:
+                        bot_one.dontSignUp()
+            except TimeoutException:
+                raise TimeoutException(curr_err_msg)
+                exit()
+                
+        print("Your average speed over",num_of_races,"was",
+            str(sum(speeds)/num_of_races) + ".")
+
+    except TimeoutException:
+        raise TimeoutException(curr_err_msg)
+        exit()
 
 class typeBot():
     def __init__(self,num_races,WPM_chosen):
@@ -86,7 +110,7 @@ class typeBot():
             EC.presence_of_element_located((By.CLASS_NAME, "gwt-Anchor"))
             )
         except TimeoutException:
-            print("Failed to open start screen Errno:",1,file=sys.stderr)
+            curr_err_msg = err_msgs["ERR_ONE"]
 
     def enterRace(self):
         """Enters race from start screen.
@@ -107,7 +131,7 @@ class typeBot():
                 EC.visibility_of_element_located((By.CLASS_NAME,"gameStatusLabel"))
             )
         except TimeoutException:
-            print("Failed to enter race. Errno:",2,file=sys.stderr)
+            curr_err_msg = err_msgs["ERR_TWO"]
 
     def waitForCount(self):
         """Wait for the countdown timer."""
@@ -150,7 +174,8 @@ class typeBot():
                 ).text
             arrText = text.split(' ')
         except TimeoutException:
-            print("Text couldn't be found. Errno:",6,file=sys.stderr)
+            curr_err_msg = err_msgs["ERR_SIX"]
+
         return arrText
 
 
@@ -177,16 +202,29 @@ class typeBot():
             input_box.send_keys(word)
             if input_box.is_displayed():
                 input_box.send_keys(' ')
-        print('\n')
 
     def raceAgain(self):
-        """Click race again.
+        """Get speed and click race again.
 
         Raises:
-            TimeoutException: Race fails to finish.
+            TimeoutException: Race fails to finish or failed to grab speed.
         """
 
         driver = self.driver
+
+        #get speed
+        try:
+            actual_speed = WebDriverWait(driver,load_delay).until(
+                EC.visibility_of_element_located(
+                    (By.CLASS_NAME,"rankPanelWpm")
+                )
+            ).text
+            print("Bot WPM:",actual_speed,"\n")
+
+            #store int(WPM) in speeds
+            speeds.append(int(''.join(x for x in actual_speed if x.isdigit())))
+        except TimeoutException:
+            curr_err_msg = err_msgs["ERR_SEVEN"]
 
         try:
             race_again_href = WebDriverWait(driver,load_delay).until(
@@ -194,7 +232,7 @@ class typeBot():
             )
             driver.execute_script("arguments[0].click()",race_again_href)
         except TimeoutException:
-            print("Race failed to finish. Errno:",3,file=sys.stderr)
+            curr_err_msg = err_msgs["ERR_THREE"]
 
     def dontSignUp(self):
         """Click "no thanks :(" on the 'Sign me up!' pop-up.
@@ -212,7 +250,7 @@ class typeBot():
                     )
                 ).click()
         except TimeoutException:
-            print("Pop-up didn't load. Errno:",4,file=sys.stderr)
+            curr_err_msg = err_msgs["ERR_FOUR"]
 
     def takeCaptcha(self):
         """Completes the captcha test to max speed.
@@ -236,7 +274,7 @@ class typeBot():
                 )
             ).click()
         except TimeoutException:
-            print("Captcha tester didn't load. Errno:",5,file=sys.stderr)
+            curr_err_msg = err_msgs["ERR_FIVE"]
 
 if __name__=="__main__":
     main()
