@@ -7,8 +7,8 @@ Races as a guest in the web game play.typeracer.com.
 
 Author: Stefan Qin
 Version: 1.0
-See README.md >put in remarks
-Link: <insert github link here>
+See README.md
+Link: https://github.com/stefanqin/TyperacerBot-Python
 """
 
 import time
@@ -35,13 +35,14 @@ num_errors = 6
 class typeBot():
     def __init__(self,num_races,WPM_chosen):
         self.driver = webdriver.Chrome()
+
         #seconds per word
         self.SPW = 60/WPM_chosen
         self.num_races = num_races
 
-        #self.driver.maximize_window()
+        self.driver.maximize_window()
 
-    def loginToAcc(self): #add user/pass params HERE
+    def loginToAcc(self):
         """Login to specified account"""
 
         self.driver = driver
