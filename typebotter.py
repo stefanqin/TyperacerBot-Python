@@ -22,8 +22,8 @@ from selenium.webdriver.common.keys import Keys
 import sys
 
 #variable parameters -> YOU CAN CHANGE THESE
-approx_WPM = 100
-num_of_races = 2
+approx_WPM = 90
+num_of_races = 5
 
 load_delay = 15
 type_URL = 'http://play.typeracer.com'
@@ -63,6 +63,7 @@ def main():
                 bot_one.startTyping(full_text)
 
                 if race_num < bot_one.num_races:
+                    bot_one.getSpeed()
                     bot_one.raceAgain()
 
                     #check if "sign me up!" pop-up appears.
@@ -72,7 +73,7 @@ def main():
                 raise TimeoutException(curr_err_msg)
                 exit()
 
-        print("Your average speed over",num_of_races,"was",
+        print("Your average speed over",num_of_races,"races was",
             str(sum(speeds)/num_of_races) + ".")
 
     except TimeoutException:
@@ -204,11 +205,11 @@ class typeBot():
                 input_box.send_keys(' ')
         print("\n")
 
-    def raceAgain(self):
-        """Get speed and click race again.
+    def getSpeed(self):
+        """Gets the actual WPM of the race.
 
         Raises:
-            TimeoutException: Race fails to finish or failed to grab speed.
+            TimeoutException: Failed to grab speed.
         """
 
         driver = self.driver
@@ -226,6 +227,15 @@ class typeBot():
             speeds.append(int(''.join(x for x in actual_speed if x.isdigit())))
         except TimeoutException:
             curr_err_msg = err_msgs["ERR_SEVEN"]
+
+    def raceAgain(self):
+        """Click race again.
+
+        Raises:
+            TimeoutException: Race fails to finish.
+        """
+
+        driver = self.driver
 
         try:
             race_again_href = WebDriverWait(driver,load_delay).until(
