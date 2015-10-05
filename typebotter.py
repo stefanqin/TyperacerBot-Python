@@ -32,6 +32,29 @@ type_URL = 'http://play.typeracer.com'
 race_num = 0
 num_errors = 6
 
+def main():
+    global race_num
+    global approx_WPM
+    global num_of_races
+
+    try:
+        bot_one = typeBot(num_of_races,approx_WPM)
+        bot_one.initPage()
+        bot_one.enterRace()
+
+        while race_num < bot_one.num_races:
+            full_text = bot_one.waitForCount()
+            bot_one.startTyping(full_text)
+
+            if race_num < bot_one.num_races:
+                bot_one.raceAgain()
+
+                #check if "sign me up!" pop-up appears.
+                if race_num == 2:
+                    bot_one.dontSignUp()
+    except:
+        raise
+
 class typeBot():
     def __init__(self,num_races,WPM_chosen):
         self.driver = webdriver.Chrome()
@@ -214,29 +237,6 @@ class typeBot():
             ).click()
         except TimeoutException:
             print("Captcha tester didn't load. Errno:",5,file=sys.stderr)
-
-def main():
-    global race_num
-    global approx_WPM
-    global num_of_races
-
-    try:
-        bot_one = typeBot(num_of_races,approx_WPM)
-        bot_one.initPage()
-        bot_one.enterRace()
-
-        while race_num < bot_one.num_races:
-            full_text = bot_one.waitForCount()
-            bot_one.startTyping(full_text)
-
-            if race_num < bot_one.num_races:
-                bot_one.raceAgain()
-
-                #check if "sign me up!" pop-up appears.
-                if race_num == 2:
-                    bot_one.dontSignUp()
-    except:
-        raise
 
 if __name__=="__main__":
     main()
