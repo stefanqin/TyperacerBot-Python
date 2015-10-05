@@ -202,6 +202,7 @@ class typeBot():
             input_box.send_keys(word)
             if input_box.is_displayed():
                 input_box.send_keys(' ')
+        print("\n")
 
     def raceAgain(self):
         """Get speed and click race again.
