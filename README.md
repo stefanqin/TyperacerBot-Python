@@ -14,8 +14,7 @@ You may specifiy the amount of races + desired WPM in the program params.
 
 Must be somewhat technically minded (run python from cmd line, install selenium chromedriver, etc.)
 
-Please install selenium chromedriver before using this bot. See: [Absolute README link](https://pypi.python.org/pypi/selenium)
-
+Please install selenium chromedriver from [here](https://pypi.python.org/pypi/selenium) before using this bot.
 
 
 <b>Currently doesn't support:</b>
