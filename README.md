@@ -3,7 +3,9 @@ Typeracer bot with python and selenium ChromeDriver
 
 <b>How to Run:</b>
 
-python3 typebotter.py
+```
+$ python3 typebotter.py
+```
 
 <b>What Does it Do?</b>
 
