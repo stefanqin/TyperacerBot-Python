@@ -23,7 +23,7 @@ import sys
 
 #variable parameters -> YOU CAN CHANGE THESE
 approx_WPM = 90
-num_of_races = 5
+num_of_races = 100
 
 load_delay = 15
 type_URL = 'http://play.typeracer.com'
@@ -181,13 +181,7 @@ class typeBot():
 
 
     def startTyping(self,full_text):
-        """Start typing
-
-        todo:
-            implement minimum WPM checker
-            implement range of WPM with seed generator
-            implement accuracy generator
-        """
+        """Start typing"""
 
         driver = self.driver
 
