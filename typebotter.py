@@ -71,7 +71,7 @@ def main():
             except TimeoutException:
                 raise TimeoutException(curr_err_msg)
                 exit()
-                
+
         print("Your average speed over",num_of_races,"was",
             str(sum(speeds)/num_of_races) + ".")
 
