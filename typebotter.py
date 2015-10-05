@@ -120,7 +120,6 @@ class typeBot():
         driver = self.driver
 
         try:
-            #driver.find_element_by_class_name("nonHideableWords").text
             text = WebDriverWait(driver,load_delay).until(
                 EC.visibility_of_element_located(
                     (By.CLASS_NAME,"nonHideableWords")
@@ -132,7 +131,7 @@ class typeBot():
         return arrText
 
 
-    def startTyping(self,full_text): #input speed params here
+    def startTyping(self,full_text):
         """Start typing
 
         todo:
@@ -222,7 +221,6 @@ def main():
     global num_of_races
 
     try:
-        #change name of bot_one to something like typebot
         bot_one = typeBot(num_of_races,approx_WPM)
         bot_one.initPage()
         bot_one.enterRace()
