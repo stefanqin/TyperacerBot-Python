@@ -69,15 +69,15 @@ def main():
                     #check if "sign me up!" pop-up appears.
                     if race_num == 2:
                         bot_one.dontSignUp()
-            except TimeoutException:
-                raise TimeoutException(curr_err_msg)
+            except TimeoutException as et:
+                print(et,file=sys.stderr)
                 exit()
 
         print("Your average speed over",num_of_races,"races was",
             str(sum(speeds)/num_of_races) + ".")
 
-    except TimeoutException:
-        raise TimeoutException(curr_err_msg)
+    except TimeoutException as et:
+        print(et,file=sys.stderr)
         exit()
 
 class typeBot():
@@ -112,6 +112,7 @@ class typeBot():
             )
         except TimeoutException:
             curr_err_msg = err_msgs["ERR_ONE"]
+            raise TimeoutException(curr_err_msg)
 
     def enterRace(self):
         """Enters race from start screen.
@@ -133,6 +134,7 @@ class typeBot():
             )
         except TimeoutException:
             curr_err_msg = err_msgs["ERR_TWO"]
+            raise TimeoutException(curr_err_msg)
 
     def waitForCount(self):
         """Wait for the countdown timer."""
@@ -176,6 +178,7 @@ class typeBot():
             arrText = text.split(' ')
         except TimeoutException:
             curr_err_msg = err_msgs["ERR_SIX"]
+            raise TimeoutException(curr_err_msg)
 
         return arrText
 
@@ -221,6 +224,7 @@ class typeBot():
             speeds.append(int(''.join(x for x in actual_speed if x.isdigit())))
         except TimeoutException:
             curr_err_msg = err_msgs["ERR_SEVEN"]
+            raise TimeoutException(curr_err_msg)
 
     def raceAgain(self):
         """Click race again.
@@ -238,6 +242,7 @@ class typeBot():
             driver.execute_script("arguments[0].click()",race_again_href)
         except TimeoutException:
             curr_err_msg = err_msgs["ERR_THREE"]
+            raise TimeoutException(curr_err_msg)
 
     def dontSignUp(self):
         """Click "no thanks :(" on the 'Sign me up!' pop-up.
@@ -256,6 +261,7 @@ class typeBot():
                 ).click()
         except TimeoutException:
             curr_err_msg = err_msgs["ERR_FOUR"]
+            raise TimeoutException(curr_err_msg)
 
     def takeCaptcha(self):
         """Completes the captcha test to max speed.
@@ -280,6 +286,7 @@ class typeBot():
             ).click()
         except TimeoutException:
             curr_err_msg = err_msgs["ERR_FIVE"]
+            raise TimeoutException(curr_err_msg)
 
 if __name__=="__main__":
     main()
